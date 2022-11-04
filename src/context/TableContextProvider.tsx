@@ -1,22 +1,21 @@
-import {createContext, FC, PropsWithChildren, useState} from "react";
+import { createContext, FC, PropsWithChildren, useState } from "react";
 import axios from "axios";
-import {IProduct} from "../types/intProduct";
-
+import { IProduct } from "../types/intProduct";
 
 const API = "http://localhost:8000/table";
 
-export const tableContext = createContext <IProduct | null>(null);
+export const tableContext = createContext<IProduct | null>(null);
 
 let page = 1;
 let totalPage: object | number = [];
 let limit = 5;
 
 interface props {
-  children: JSX.Element | JSX.Element[]
+  children: JSX.Element | JSX.Element[];
 }
 
 const TableContextProvider = ({ children }: props) => {
-  const [product,setProduct] = useState([])
+  const [product, setProduct] = useState([]);
   const [searchVal, setSearchVal] = useState("");
   const [value, setValue] = useState("q");
 
@@ -24,31 +23,28 @@ const TableContextProvider = ({ children }: props) => {
     await axios.post(API, product);
   };
 
-  const getProduct = async (type?: string,operator?: string) => {
+  const getProduct = async (type?: string, operator?: string) => {
     totalPageFunc();
-    if(type === "quantity" && operator === "less"){
-      setValue('quantity_gte')
-    }else if(type === "quantity" && operator === "more"){
-      setValue('quantity_lte')
-    }else if(type === "distance" && operator === "less"){
-      setValue('distance_gte')
-    }else if(type === "distance" && operator === "more"){
-      setValue('distance_lte')
-    }else if(type === "distance" && operator === "equals"){
-      setValue(`distance`)
-    }else if(type === "quantity" && operator === "equals"){
-      setValue(`quantity`)
-    }else{
-      setValue('q')
+    if (type === "quantity" && operator === "less") {
+      setValue("quantity_gte");
+    } else if (type === "quantity" && operator === "more") {
+      setValue("quantity_lte");
+    } else if (type === "distance" && operator === "less") {
+      setValue("distance_gte");
+    } else if (type === "distance" && operator === "more") {
+      setValue("distance_lte");
+    } else if (type === "distance" && operator === "equals") {
+      setValue(`distance`);
+    } else if (type === "quantity" && operator === "equals") {
+      setValue(`quantity`);
+    } else {
+      setValue("q");
     }
     const { data } = await axios.get(
-        `${API}?_page=${page}&_limit=${limit}&${value}=${searchVal}`
+      `${API}?_page=${page}&_limit=${limit}&${value}=${searchVal}`
     );
-    setProduct(data)
+    setProduct(data);
   };
-
-
-
 
   // Работа с пагинацией
 
@@ -60,13 +56,13 @@ const TableContextProvider = ({ children }: props) => {
   const prevPage = () => {
     if (page <= 1) return;
     page--;
-    getProduct()
+    getProduct();
   };
 
   const nextPage = () => {
     if (totalPage <= page) return;
     page++;
-    getProduct()
+    getProduct();
   };
 
   let cloud: any = {
@@ -80,9 +76,7 @@ const TableContextProvider = ({ children }: props) => {
   };
 
   return (
-      <tableContext.Provider value={cloud}>
-        {children}
-      </tableContext.Provider>
+    <tableContext.Provider value={cloud}>{children}</tableContext.Provider>
   );
 };
 

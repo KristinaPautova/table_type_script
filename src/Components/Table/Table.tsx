@@ -1,16 +1,15 @@
-import React, {FC, useContext, useEffect, useState} from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import "./Table.css";
 import { tableContext } from "../../context/TableContextProvider";
 import Search from "../Search/Search";
-import {IProduct} from "../../types/intProduct";
+import { IProduct } from "../../types/intProduct";
 
 const Table: FC = () => {
-  const { getProduct, productsArr, prevPage, nextPage } : any =
+  const { getProduct, productsArr, prevPage, nextPage }: any =
     useContext(tableContext);
 
   const [type, setType] = useState("name");
   const [operator, setOperator] = useState("contains");
-
 
   useEffect(() => {
     getProduct();
@@ -20,7 +19,12 @@ const Table: FC = () => {
     <>
       {productsArr ? (
         <div className="table">
-          <Search type={type} setType={setType} operator={operator} setOperator={setOperator}/>
+          <Search
+            type={type}
+            setType={setType}
+            operator={operator}
+            setOperator={setOperator}
+          />
           <div className="container">
             <table>
               <thead>
